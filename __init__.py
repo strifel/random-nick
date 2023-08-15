@@ -103,9 +103,12 @@ class RandomNickApp(Application):
 
         self._time += delta_ms
         if self._time >= self._config.time:
-            self._name = random.choice(self._config.names)
-            self._pronouns = random.choice(self._config.pronouns)
-            self._time = 0
+            name = random.choice(self._config.names)
+            pronouns = random.choice(self._config.pronouns)
+            if (name != self._name or pronouns != self._pronouns):
+                self._name = name
+                self._pronouns = pronouns
+                self._time = 0
 
 
         self._led += delta_ms / 45
