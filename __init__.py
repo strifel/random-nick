@@ -63,9 +63,8 @@ class Configuration:
 class RandomNickApp(Application):
     def __init__(self, app_ctx: ApplicationContext) -> None:
         super().__init__(app_ctx)
-        self._scale = 1.0
+        self._ledPhase = 0
         self._led = 0.0
-        self._phase = 0.0
         self._time = 0
         self._filename = "/flash/nick_random.json"
         self._config = Configuration.load(self._filename)
@@ -83,14 +82,14 @@ class RandomNickApp(Application):
 
         ctx.move_to(0, -20)
         ctx.save()
-        ctx.scale(self._scale, 1)
+        ctx.scale(1, 1)
         ctx.text(self._name)
-        ctx.scale(self._scale * 0.8, 1)
+        ctx.scale(0.8, 1)
         ctx.move_to(0, 20)
         ctx.text(self._pronouns)
         ctx.restore()
 
-        leds.set_hsv(int(self._led), abs(self._scale) * 360, 1, 0.2)
+        leds.set_hsv(int(self._led), abs(math.sin(self._ledPhase)) * 360, 1, 0.2)
 
         leds.update()
         # ctx.fill()
@@ -110,7 +109,7 @@ class RandomNickApp(Application):
                 self._pronouns = pronouns
                 self._time = 0
 
-
         self._led += delta_ms / 45
         if self._led >= 40:
             self._led = 0
+        self._ledPhase += delta_ms / 1000
