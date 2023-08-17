@@ -64,12 +64,14 @@ class RandomNickApp(Application):
     def __init__(self, app_ctx: ApplicationContext) -> None:
         super().__init__(app_ctx)
         self._ledPhase = 0
-        self._led = 0.0
+        self._led = 0
         self._time = 0
         self._filename = "/flash/nick_random.json"
         self._config = Configuration.load(self._filename)
         self._name = random.choice(self._config.names)
         self._pronouns = random.choice(self._config.pronouns)
+        self._nextLed = (self._config.time / 40)
+
 
     def draw(self, ctx: Context) -> None:
         ctx.text_align = ctx.CENTER
@@ -101,6 +103,13 @@ class RandomNickApp(Application):
         super().think(ins, delta_ms)
 
         self._time += delta_ms
+
+        if self._time >= self._nextLed:
+            self._nextLed += (self._config.time / 40)
+            if self._led < 39:
+                self._led += 1
+
+
         if self._time >= self._config.time:
             name = random.choice(self._config.names)
             pronouns = random.choice(self._config.pronouns)
@@ -108,8 +117,7 @@ class RandomNickApp(Application):
                 self._name = name
                 self._pronouns = pronouns
                 self._time = 0
-
-        self._led += delta_ms / 45
-        if self._led >= 40:
-            self._led = 0
+                self._led = 0
+                self._nextLed = (self._config.time / 40)
+        
         self._ledPhase += delta_ms / 1000
