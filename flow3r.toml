@@ -9,3 +9,4 @@ class = "RandomNickApp"
 author = "Flow3r Badge Authors & strifel"
 license = "LGPL-3.0-only"
 url = "https://github.com/strifel/random-nick"
+version = 1
